@@ -52,6 +52,7 @@ ifdef CONFIG_ANDROID_LOG
 L_CFLAGS += -DCONFIG_ANDROID_LOG
 endif
 
+
 ########################
 
 include $(CLEAR_VARS)

@@ -40,6 +40,10 @@ ifdef CONFIG_ANDROID_LOG
 L_CFLAGS += -DCONFIG_ANDROID_LOG
 endif
 
+ifeq ($(BOARD_WEXT_NO_COMBO_SCAN),true)
+L_CFLAGS += -DWEXT_NO_COMBO_SCAN
+endif
+
 ########################
 
 include $(CLEAR_VARS)
