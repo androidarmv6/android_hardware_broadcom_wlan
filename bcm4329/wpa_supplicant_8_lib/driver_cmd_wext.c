@@ -320,7 +320,7 @@ int wpa_driver_wext_driver_cmd( void *priv, char *cmd, char *buf, size_t buf_len
 	os_memcpy(buf, cmd, strlen(cmd) + 1);
 	iwr.u.data.pointer = buf;
 	iwr.u.data.length = buf_len;
-
+#ifndef WEXT_NO_COMBO_SCAN
 	if( os_strncasecmp(cmd, "CSCAN", 5) == 0 ) {
 		if (!wpa_s->scanning && ((wpa_s->wpa_state <= WPA_SCANNING) ||
 					(wpa_s->wpa_state >= WPA_COMPLETED))) {
@@ -330,7 +330,7 @@ int wpa_driver_wext_driver_cmd( void *priv, char *cmd, char *buf, size_t buf_len
 			return ret;
 		}
 	}
-
+#endif
 	ret = ioctl(drv->ioctl_sock, SIOCSIWPRIV, &iwr);
 
 	if (ret < 0) {
@@ -357,10 +357,13 @@ int wpa_driver_wext_driver_cmd( void *priv, char *cmd, char *buf, size_t buf_len
 		} else if (os_strcasecmp(cmd, "STOP") == 0) {
 			drv->driver_is_started = FALSE;
 			/* wpa_msg(drv->ctx, MSG_INFO, WPA_EVENT_DRIVER_STATE "STOPPED"); */
-		} else if (os_strncasecmp(cmd, "CSCAN", 5) == 0) {
+		}
+#ifndef WEXT_NO_COMBO_SCAN
+		else if (os_strncasecmp(cmd, "CSCAN", 5) == 0) {
 			wpa_driver_wext_set_scan_timeout(priv);
 			wpa_supplicant_notify_scanning(wpa_s, 1);
 		}
+#endif
 		wpa_printf(MSG_DEBUG, "%s %s len = %d, %d", __func__, buf, ret, strlen(buf));
 	}
 	return ret;
